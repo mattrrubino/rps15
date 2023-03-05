@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  mongo:
+    image: mongo:latest
+  api:
+    build: api
+    ports:
+      - "80:8000"
+    depends_on:
+      mongo:
+        condition: service_started
