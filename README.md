@@ -5,7 +5,7 @@ This repository contains the frontend and backend source code for RPS15 Online.
 The project outline is available on [Google Drive](https://docs.google.com/document/d/1x0xAeOwBHWjecVnfBTDeRkyU-r3mhlzBU-41T72Rxng).
 
 ## Setup
-This section describes how to set up the project for development. It will assume that you have cloned the repository using either `git clone https://github.com/mattrrubino/cse312-group-project.git` or `git@github.com:mattrrubino/cse312-group-project.git`.
+This section describes how to set up the project for development. It will assume that you have cloned the repository using either `git clone https://github.com/mattrrubino/cse312-group-project.git` or `git clone git@github.com:mattrrubino/cse312-group-project.git`.
 
 ### Frontend
 TODO
