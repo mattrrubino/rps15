@@ -18,7 +18,7 @@ To set up the API for development:
 3. `python -m venv venv`
 4. Activate the virtual environment
     - Mac/Linux: `. venv/bin/activate`
-    - Windows: `call venv/Scripts/activate`
+    - Windows: `call venv/Scripts/activate` (may need to call cmd first if 'call' isn't working)
 5. `pip install -r requirements.txt`
 6. `uvicorn src.main:app --reload`
 
