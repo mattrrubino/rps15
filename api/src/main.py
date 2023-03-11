@@ -69,7 +69,6 @@ async def logout(response: Response, token: str = Cookie()):
     # Redirect to login page
     response.status_code = 301
     response.headers["Location"] = "/login"
-    response.headers["Content-Length"] = 0
 
 #endregion
 
