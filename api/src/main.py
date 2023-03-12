@@ -10,9 +10,9 @@ app = FastAPI()
 #region User Authentication
 
 @app.post("/register", status_code=201)
-async def register(response: Response, username: str = Form(), password: str = Form(), confirmPassword: str = Form()):
+async def register(response: Response, username: str = Form(), password: str = Form()):
     # Cannot register with invalid form fields
-    if not validUsername(username) or not validPassword(password) or password != confirmPassword:
+    if not validUsername(username) or not validPassword(password):
         response.status_code = 400
         return "Bad Request"
 
