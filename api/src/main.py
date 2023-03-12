@@ -1,7 +1,7 @@
 import bcrypt
-from fastapi import FastAPI, Response, Form, Cookie
+from fastapi import FastAPI, Response, WebSocket, Form, Cookie
 from src.validators import validUsername, validPassword
-from src.db import getUser, createUser, createSession, deleteSession
+from src.db import getUser, createUser, getSessionUsername, createSession, deleteSession
 
 
 app = FastAPI()
@@ -28,7 +28,7 @@ async def register(response: Response, username: str = Form(), password: str = F
 
     # Create session data
     token = createSession(username)
-    response.set_cookie("token", token)
+    response.set_cookie("token", token, httponly=True)
 
 
 @app.post("/login")
@@ -52,19 +52,14 @@ async def login(response: Response, username: str = Form(), password: str = Form
 
     # Create session data
     token = createSession(username)
-    response.set_cookie("token", token)
+    response.set_cookie("token", token, httponly=True)
 
 
 @app.post("/logout")
 async def logout(response: Response, token: str = Cookie()):
-    # Cannot log out without session token
-    if token is None:
-        response.status_code = 400
-        return "Bad Request"
-
     # Revoke session data
     deleteSession(token)
-    response.delete_cookie("token")
+    response.delete_cookie("token", httponly=True)
 
     # Redirect to login page
     response.status_code = 301
@@ -92,5 +87,47 @@ async def user(response: Response, username: str) -> dict:
     del user["Password"]
 
     return user
+
+#endregion
+
+
+#region Matchmaking
+
+@app.websocket("/matchmaking")
+async def matchmaking(ws: WebSocket, response: Response, token: str = Cookie()):
+    # Cannot connect to matchmaking with invalid session token
+    username = getSessionUsername(token)
+    if username is None:
+        await ws.close()
+        response.status_code = 403
+        return "Forbidden"
+
+    await ws.accept()
+
+    # TODO: Matchmaking code here
+    await ws.send_text("Connected to matchmaking!")
+    await ws.close()
+
+#endregion
+
+
+#region Game
+
+@app.websocket("/game/{gameId}")
+async def game(ws: WebSocket, response: Response, gameId: str, token: str = Cookie()):
+    # Cannot connect to game with invalid session token
+    username = getSessionUsername(token)
+    if username is None:
+        await ws.close()
+        response.status_code = 403
+        return "Forbidden"
+
+    # TODO: Check if this user belongs to this game
+
+    await ws.accept()
+
+    # TODO: Game code here
+    await ws.send_text(f"Connected to game {gameId}!")
+    await ws.close()
 
 #endregion

@@ -39,8 +39,11 @@ def createUser(username: str, password: str) -> dict:
 
 #region Session Data
 
-def getSession(token: str) -> dict:
-    return session.find_one({"Token": token})
+def getSessionUsername(token: str) -> Optional[str]:
+    sessionData = session.find_one({"Token": token})
+    if sessionData:
+        return sessionData["Username"]
+    return sessionData
 
 
 def deleteSession(token: str) -> None:
