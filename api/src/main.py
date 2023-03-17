@@ -1,4 +1,5 @@
 import bcrypt
+import html
 from fastapi import FastAPI, Response, WebSocket, Form, Cookie
 from src.validators import validUsername, validPassword
 from src.db import getUser, createUser, getSessionUsername, createSession, deleteSession
@@ -15,6 +16,9 @@ async def register(response: Response, username: str = Form(), password: str = F
     if not validUsername(username) or not validPassword(password):
         response.status_code = 400
         return "Bad Request"
+
+    # Prevent HTML injection
+    username = html.escape(username)
 
     # Cannot register a username that already exists
     if getUser(username) is not None:
