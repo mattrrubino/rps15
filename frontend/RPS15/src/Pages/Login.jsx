@@ -1,4 +1,4 @@
-import React from 'react'
+import "./Login.css"
 
 const Login = () => {
   return (
@@ -38,7 +38,7 @@ const Login = () => {
                 Submit
                 </button>
                 <button type="submit" id="forgot-password" className="form-button">
-                Submit
+                Forgot Password
                 </button>
             </div>
             </form>
