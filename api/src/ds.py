@@ -16,9 +16,13 @@ class Matcher:
             playerB = self.queue
 
             if playerB:
+                # Create the game and notify other player's thread
                 game = Game(playerA, playerB)
                 await playerB.game.put(game)
                 self.queue = None
+
+                # Start the game thread
+                asyncio.create_task(game.run())
             else:
                 self.queue = playerA
 
@@ -26,6 +30,7 @@ class Matcher:
             gameTask = asyncio.create_task(playerA.game.get())
             messageTask = asyncio.create_task(playerA.connection.receive())
 
+            # Try to read game from other player's thread
             while game is None:
                 done, _ = await asyncio.wait(
                     [gameTask, messageTask],
@@ -38,6 +43,7 @@ class Matcher:
                     else:
                         message = task.result()
 
+                        # Clear Matcher if client disconnects in queue
                         if message["type"] == "websocket.disconnect":
                             gameTask.cancel()
                             with self.lock:
@@ -46,4 +52,7 @@ class Matcher:
 
                         messageTask = asyncio.create_task(playerA.connection.receive())
 
-        await game.handlePlayer(playerA)
+        try:
+            await game.runPlayer(playerA)
+        except asyncio.CancelledError:
+            pass
