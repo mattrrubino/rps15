@@ -1,9 +1,9 @@
-import './CreateAccount.css'
+//import './CreateAccount.css'  |  
 
 const CreateAccount = () => {
   return (
     <div>
-      <link rel="stylesheet" href="CreateAccount.css" />
+      <link rel="stylesheet" href="../src/Pages/CreateAccount.css" />
       <div className="login-container">
         <div className="flex-container" />
         <div className="flex-item">
