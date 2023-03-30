@@ -1,4 +1,3 @@
-//import "./Login.css" |  
 import { useNavigate } from "react-router-dom"
 
 const Login = () => {
@@ -8,13 +7,13 @@ const Login = () => {
             <link rel="stylesheet" href="../src/Pages/Login.css" />
             <div className="login-container">
 
-                <div className="login-flex-container" />
+                <div className="login-flex-container">
 
                     <div className="flex-item">
                         <p className="logo">Account Login</p>
                     </div>
 
-                    <form className="login-form">
+                    <form className="flex-item login-form">
                         <div className="flex-item">
                             <label htmlFor="username">Username:</label>
                             <input
@@ -25,7 +24,7 @@ const Login = () => {
                             required=""
                             />
                         </div>
-
+                        <br/>
                         <div className="flex-item">
                             <label htmlFor="password">Password:</label>
                             <input
@@ -36,7 +35,7 @@ const Login = () => {
                             required=""
                             />
                         </div>
-
+                        <br/>
                         <div className="flex-item button-flex-container">
                             <button type="button" id="create-account" className="form-button" onClick={() => navigate('../CreateAccount')}>
                             Create Account
@@ -51,6 +50,8 @@ const Login = () => {
                             </button>
                         </div>
                     </form>
+
+                </div>
             </div>
         </div>
     )

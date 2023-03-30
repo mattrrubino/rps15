@@ -5,6 +5,7 @@ const CreateAccount = () => {
     <div>
       <link rel="stylesheet" href="../src/Pages/CreateAccount.css" />
       <div className="create-account-container">
+
         <div className="flex-item">
           <p className="logo">Account Create</p>
         </div>
@@ -49,7 +50,7 @@ const CreateAccount = () => {
             className="form-input" 
             required />
           </div>
-
+          <br/>
           <div className="flex-item">
             <button type="submit" className="form-button">Submit</button>
           </div>  
