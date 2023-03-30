@@ -8,11 +8,13 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+
 }
 
-.flex-container {
+.create-flex-container {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
 }
 
 .flex-item {
@@ -53,5 +55,8 @@ input {
     font-size: 32px;
     padding: 5px;
     color: #45A29E;
-    right: 50%;
+}
+
+.button-container {
+    text-align: center;
 }
