@@ -43,7 +43,7 @@ class Game:
             except asyncio.CancelledError:
                 pass
 
-    async def run(self):
+    async def startSequence(self):
         msgA = json.dumps({"operation": "start_game", "opponent": self.playerB.username})
         msgB = json.dumps({"operation": "start_game", "opponent": self.playerA.username})
 
@@ -52,14 +52,21 @@ class Game:
 
         await asyncio.sleep(5)
 
+    async def roundSequence(self):
+        msg = json.dumps({"operation": "start_round", "number": self.getRound()})
+
+        await self.playerA.connection.send_text(msg)
+        await self.playerB.connection.send_text(msg)
+
+        await asyncio.sleep(5)
+        self.nextRound()
+
+
+    async def run(self):
+        await self.startSequence()
+
         while not self.isDone():
-            msg = json.dumps({"operation": "start_round", "number": self.getRound()})
-
-            await self.playerA.connection.send_text(msg)
-            await self.playerB.connection.send_text(msg)
-
-            await asyncio.sleep(5)
-            self.nextRound()
+            await self.roundSequence()
 
         self.kill()
 

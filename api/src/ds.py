@@ -8,7 +8,6 @@ class Matcher:
         self.lock = threading.Lock()
         self.queue = None, None
 
-    # TODO: What if close sent during queue put?
     async def match(self, playerA: Player):
         game = None
 
