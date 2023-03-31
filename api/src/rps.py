@@ -52,6 +52,23 @@ class Game:
 
         await asyncio.sleep(5)
 
+    async def endSequence(self, winner: Player, loser: Player) -> None:
+        msg = json.dumps({"operation": "end_game", "winner": winner.username, "loser": loser.username})
+
+        # Try sending on A's connection
+        try:
+            await self.playerA.connection.send_text(msg)
+        except RuntimeError:
+            pass
+
+        # Try sending on B's connection
+        try:
+            await self.playerB.connection.send_text(msg)
+        except RuntimeError:
+            pass
+
+        self.kill()
+
     async def roundSequence(self):
         msg = json.dumps({"operation": "start_round", "number": self.getRoundNumber()})
 
@@ -61,13 +78,14 @@ class Game:
         await asyncio.sleep(5)
         self.nextRound()
 
-    async def run(self):
+    async def handleGame(self):
         await self.startSequence()
 
         while not self.isDone():
             await self.roundSequence()
 
-        self.kill()
+        # TODO: Set to correct winner and loser
+        await self.endSequence(self.playerA, self.playerB)
 
     async def handlePlayer(self, player: Player, opponent: Player):
         while True:
@@ -79,9 +97,8 @@ class Game:
                 continue
 
             # Surrender the game if the client closes the connection
-            if t == "websocket.close":
-                # TODO: Give win to opponent
-                self.kill()
+            if t == "websocket.disconnect":
+                await self.endSequence(opponent, player)
                 return
 
             # Ignore message without text
@@ -109,6 +126,17 @@ class Game:
                 response = json.dumps({"operation": "send_message", "username": player.username, "message": message})
                 await player.connection.send_text(response)
                 await opponent.connection.send_text(response)
+            elif operation == "send_move":
+                # TODO: Handle user move here
+                pass
+            else:
+                # Unknown operation sent
+                pass
+
+    def runGame(self):
+        task = asyncio.create_task(self.handleGame())
+        self.handlerTasks.append(task)
+        return task
 
     def runPlayer(self, player: Player):
         if player is self.playerA:

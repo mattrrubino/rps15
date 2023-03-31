@@ -21,8 +21,8 @@ class Matcher:
 
                 self.queue = None, None
 
-                # Start the game thread
-                asyncio.create_task(game.run())
+                # Run the game thread
+                game.runGame()
             else:
                 gameChannel = asyncio.Queue()
                 self.queue = playerA, gameChannel
@@ -53,11 +53,18 @@ class Matcher:
 
                         # Clear Matcher if client disconnects in queue
                         if message["type"] == "websocket.disconnect":
-                            gameTask.cancel()
+                            try:
+                                gameTask.cancel()
+                            except asyncio.CancelledError:
+                                pass
+
                             with self.lock:
                                 self.queue = None, None
                             return
 
                         messageTask = asyncio.create_task(playerA.connection.receive())
 
-        await game.runPlayer(playerA)
+        try:
+            await game.runPlayer(playerA)
+        except asyncio.CancelledError:
+            pass
