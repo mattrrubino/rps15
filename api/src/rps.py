@@ -13,7 +13,6 @@ class Player:
     def __init__(self, username: str, connection):
         self.username = username
         self.connection = connection
-        self.game = asyncio.Queue()
 
 
 class Round:
@@ -26,7 +25,7 @@ class Game:
         self.playerA = playerA
         self.playerB = playerB
         self.round = Round(1)
-        self.handlerTasks = {}
+        self.handlerTasks = []
 
     def isDone(self) -> bool:
         return self.getRound() > 5
@@ -38,7 +37,7 @@ class Game:
         self.round = Round(self.round.number+1)
 
     def kill(self) -> None:
-        for handler in self.handlerTasks.values():
+        for handler in self.handlerTasks:
             handler.cancel()
 
     async def run(self):
@@ -71,5 +70,5 @@ class Game:
             opponent = self.playerA
 
         task = asyncio.create_task(self.handlePlayer(player, opponent))
-        self.handlerTasks[player] = task
+        self.handlerTasks.append(task)
         return task
