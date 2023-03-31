@@ -13,7 +13,7 @@ const Login = () => {
                         <p className="logo">Account Login</p>
                     </div>
 
-                    <form className="flex-item login-form">
+                    <form className="flex-item login-form" enctype='multipart/form-data'>
                         <div className="flex-item">
                             <label htmlFor="username">Username:</label>
                             <input

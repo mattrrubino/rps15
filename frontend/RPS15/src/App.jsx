@@ -14,7 +14,7 @@ import CreateAccount from './Pages/CreateAccount'
 // Clean imports babyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [token, setToken] = useState(0)
 
   return (
     <BrowserRouter>

@@ -6,11 +6,12 @@ const CreateAccount = () => {
       <link rel="stylesheet" href="../src/Pages/CreateAccount.css" />
       <div className="create-account-container">
         <div className="create-flex-container">
+
           <div className="flex-item">
             <p className="logo">Account Create</p>
           </div>
 
-          <form className="create-account-form">
+          <form className="create-account-form" enctype='multipart/form-data'>
             <div className="flex-item">
               <label htmlFor="username">Username:</label>
               <input 
