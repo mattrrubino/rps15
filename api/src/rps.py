@@ -38,7 +38,10 @@ class Game:
 
     def kill(self) -> None:
         for handler in self.handlerTasks:
-            handler.cancel()
+            try:
+                handler.cancel()
+            except asyncio.CancelledError:
+                pass
 
     async def run(self):
         msgA = json.dumps({"operation": "start_game", "opponent": self.playerB.username})
@@ -61,7 +64,45 @@ class Game:
         self.kill()
 
     async def handlePlayer(self, player: Player, opponent: Player):
-        await asyncio.sleep(1000)
+        while True:
+            msg = await player.connection.receive()
+
+            # Ignore message without WebSocket message type
+            t = msg.get("type")
+            if t is None:
+                continue
+
+            # Surrender the game if the client closes the connection
+            if t == "websocket.close":
+                # TODO: Give win to opponent
+                self.kill()
+                return
+
+            # Ignore message without text
+            text = msg.get("text")
+            if text is None:
+                continue
+
+            # Try to parse message into JSON object
+            try:
+                obj = json.loads(text)
+            except (json.JSONDecodeError, TypeError):
+                continue
+
+            # Ignore message without an operation
+            operation = obj.get("operation")
+            if operation is None:
+                continue
+
+            if operation == "send_message":
+                # Ignore chat if no message is supplied
+                message = obj.get("message")
+                if message is None:
+                    continue
+
+                response = json.dumps({"operation": "send_message", "username": player.username, "message": message})
+                await player.connection.send_text(response)
+                await opponent.connection.send_text(response)
 
     def runPlayer(self, player: Player):
         if player is self.playerA:

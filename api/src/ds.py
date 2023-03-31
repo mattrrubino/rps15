@@ -42,6 +42,13 @@ class Matcher:
                 for task in done:
                     if task is gameTask:
                         game = task.result()
+
+                        try:
+                            messageTask.cancel()
+                        except asyncio.CancelledError:
+                            pass
+
+                        break
                     else:
                         message = task.result()
 
@@ -54,7 +61,4 @@ class Matcher:
 
                         messageTask = asyncio.create_task(playerA.connection.receive())
 
-        try:
-            await game.runPlayer(playerA)
-        except asyncio.CancelledError:
-            pass
+        await game.runPlayer(playerA)
