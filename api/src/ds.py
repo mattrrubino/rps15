@@ -6,28 +6,29 @@ from src.rps import Player, Game
 class Matcher:
     def __init__(self) -> None:
         self.lock = threading.Lock()
-        self.queue = None
+        self.queue = None, None
 
-    # TODO: What if close sent during queue put?
     async def match(self, playerA: Player):
         game = None
 
         with self.lock:
-            playerB = self.queue
+            playerB, gameChannel = self.queue
 
-            if playerB:
+            if playerB and gameChannel:
                 # Create the game and notify other player's thread
                 game = Game(playerA, playerB)
-                await playerB.game.put(game)
-                self.queue = None
+                await gameChannel.put(game)
 
-                # Start the game thread
-                asyncio.create_task(game.run())
+                self.queue = None, None
+
+                # Run the game thread
+                game.runGame()
             else:
-                self.queue = playerA
+                gameChannel = asyncio.Queue()
+                self.queue = playerA, gameChannel
 
         if game is None:
-            gameTask = asyncio.create_task(playerA.game.get())
+            gameTask = asyncio.create_task(gameChannel.get())
             messageTask = asyncio.create_task(playerA.connection.receive())
 
             # Try to read game from other player's thread
@@ -40,14 +41,25 @@ class Matcher:
                 for task in done:
                     if task is gameTask:
                         game = task.result()
+
+                        try:
+                            messageTask.cancel()
+                        except asyncio.CancelledError:
+                            pass
+
+                        break
                     else:
                         message = task.result()
 
                         # Clear Matcher if client disconnects in queue
                         if message["type"] == "websocket.disconnect":
-                            gameTask.cancel()
+                            try:
+                                gameTask.cancel()
+                            except asyncio.CancelledError:
+                                pass
+
                             with self.lock:
-                                self.queue = None
+                                self.queue = None, None
                             return
 
                         messageTask = asyncio.create_task(playerA.connection.receive())

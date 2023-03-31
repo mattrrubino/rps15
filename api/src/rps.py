@@ -13,7 +13,6 @@ class Player:
     def __init__(self, username: str, connection):
         self.username = username
         self.connection = connection
-        self.game = asyncio.Queue()
 
 
 class Round:
@@ -26,22 +25,25 @@ class Game:
         self.playerA = playerA
         self.playerB = playerB
         self.round = Round(1)
-        self.handlerTasks = {}
+        self.handlerTasks = []
 
     def isDone(self) -> bool:
-        return self.getRound() > 5
+        return self.getRoundNumber() > 5
 
-    def getRound(self) -> int:
+    def getRoundNumber(self) -> int:
         return self.round.number
 
     def nextRound(self) -> None:
         self.round = Round(self.round.number+1)
 
     def kill(self) -> None:
-        for handler in self.handlerTasks.values():
-            handler.cancel()
+        for handler in self.handlerTasks:
+            try:
+                handler.cancel()
+            except asyncio.CancelledError:
+                pass
 
-    async def run(self):
+    async def startSequence(self):
         msgA = json.dumps({"operation": "start_game", "opponent": self.playerB.username})
         msgB = json.dumps({"operation": "start_game", "opponent": self.playerA.username})
 
@@ -50,19 +52,91 @@ class Game:
 
         await asyncio.sleep(5)
 
-        while not self.isDone():
-            msg = json.dumps({"operation": "start_round", "number": self.getRound()})
+    async def endSequence(self, winner: Player, loser: Player) -> None:
+        msg = json.dumps({"operation": "end_game", "winner": winner.username, "loser": loser.username})
 
+        # Try sending on A's connection
+        try:
             await self.playerA.connection.send_text(msg)
-            await self.playerB.connection.send_text(msg)
+        except RuntimeError:
+            pass
 
-            await asyncio.sleep(5)
-            self.nextRound()
+        # Try sending on B's connection
+        try:
+            await self.playerB.connection.send_text(msg)
+        except RuntimeError:
+            pass
 
         self.kill()
 
+    async def roundSequence(self):
+        msg = json.dumps({"operation": "start_round", "number": self.getRoundNumber()})
+
+        await self.playerA.connection.send_text(msg)
+        await self.playerB.connection.send_text(msg)
+
+        await asyncio.sleep(5)
+        self.nextRound()
+
+    async def handleGame(self):
+        await self.startSequence()
+
+        while not self.isDone():
+            await self.roundSequence()
+
+        # TODO: Set to correct winner and loser
+        await self.endSequence(self.playerA, self.playerB)
+
     async def handlePlayer(self, player: Player, opponent: Player):
-        await asyncio.sleep(1000)
+        while True:
+            msg = await player.connection.receive()
+
+            # Ignore message without WebSocket message type
+            t = msg.get("type")
+            if t is None:
+                continue
+
+            # Surrender the game if the client closes the connection
+            if t == "websocket.disconnect":
+                await self.endSequence(opponent, player)
+                return
+
+            # Ignore message without text
+            text = msg.get("text")
+            if text is None:
+                continue
+
+            # Try to parse message into JSON object
+            try:
+                obj = json.loads(text)
+            except (json.JSONDecodeError, TypeError):
+                continue
+
+            # Ignore message without an operation
+            operation = obj.get("operation")
+            if operation is None:
+                continue
+
+            if operation == "send_message":
+                # Ignore chat if no message is supplied
+                message = obj.get("message")
+                if message is None:
+                    continue
+
+                response = json.dumps({"operation": "send_message", "username": player.username, "message": message})
+                await player.connection.send_text(response)
+                await opponent.connection.send_text(response)
+            elif operation == "send_move":
+                # TODO: Handle user move here
+                pass
+            else:
+                # Unknown operation sent
+                pass
+
+    def runGame(self):
+        task = asyncio.create_task(self.handleGame())
+        self.handlerTasks.append(task)
+        return task
 
     def runPlayer(self, player: Player):
         if player is self.playerA:
@@ -71,5 +145,5 @@ class Game:
             opponent = self.playerA
 
         task = asyncio.create_task(self.handlePlayer(player, opponent))
-        self.handlerTasks[player] = task
+        self.handlerTasks.append(task)
         return task
