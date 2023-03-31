@@ -21,8 +21,8 @@ VERBS = {
     "paper": {"air": "fans", "rock": "covers", "water": "floats on", "gun": "outlaws", "lightning": "defines", "default": "rebukes"},
     "air": {"fire": "blows out", "rock": "erodes", "water": "evaporates", "devil": "chokes", "gun": "tarnishes", "dragon": "freezes", "lightning": "creates"},
     "water": {"rock": "erodes", "fire": "puts out", "scissors": "rusts", "gun": "rusts", "lightning": "conducts", "default": "drowns"},
-    "dragon": {"devil": "commands", "lightning": "breathes", "fire": "breathes", "rock": "rests on", "snake": "spawns", "default": "immune to"},
-    "devil": {"rock": "hurls", "fire": "breathes", "lightning": "casts", "snakes": "eats", "human": "possesses", "default": "immune to"},
+    "dragon": {"devil": "commands", "lightning": "breathes", "fire": "breathes", "rock": "rests on", "snake": "spawns", "default": "is immune to"},
+    "devil": {"rock": "hurls", "fire": "breathes", "lightning": "casts", "snakes": "eats", "human": "possesses", "default": "is immune to"},
     "lightning": {"gun": "melts", "scissors": "melts", "rock": "splits", "tree": "splits", "fire": "starts", "defautl": "strikes"},
     "gun": {"rock": "targets", "tree": "targets", "fire": "targets", "scissors": "outclasses", "default": "shoots"},
 }
