@@ -28,9 +28,9 @@ class Game:
         self.handlerTasks = []
 
     def isDone(self) -> bool:
-        return self.getRound() > 5
+        return self.getRoundNumber() > 5
 
-    def getRound(self) -> int:
+    def getRoundNumber(self) -> int:
         return self.round.number
 
     def nextRound(self) -> None:
@@ -53,14 +53,13 @@ class Game:
         await asyncio.sleep(5)
 
     async def roundSequence(self):
-        msg = json.dumps({"operation": "start_round", "number": self.getRound()})
+        msg = json.dumps({"operation": "start_round", "number": self.getRoundNumber()})
 
         await self.playerA.connection.send_text(msg)
         await self.playerB.connection.send_text(msg)
 
         await asyncio.sleep(5)
         self.nextRound()
-
 
     async def run(self):
         await self.startSequence()
