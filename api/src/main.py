@@ -1,7 +1,5 @@
 import bcrypt
 import html
-import asyncio
-from secrets import token_urlsafe
 from fastapi import FastAPI, Response, WebSocket, Form, Cookie
 from src.validators import validUsername, validPassword
 from src.db import getUser, createUser, getSessionUsername, createSession, deleteSession
@@ -36,7 +34,7 @@ async def register(response: Response, username: str = Form(), password: str = F
 
     # Create session data
     token = createSession(username)
-    response.set_cookie("token", token, httponly=True)
+    response.set_cookie("token", token, httponly=True, expires=2**30)
 
 
 @app.post("/login")
@@ -60,7 +58,7 @@ async def login(response: Response, username: str = Form(), password: str = Form
 
     # Create session data
     token = createSession(username)
-    response.set_cookie("token", token, httponly=True)
+    response.set_cookie("token", token, httponly=True, expires=2**30)
 
 
 @app.post("/logout")
