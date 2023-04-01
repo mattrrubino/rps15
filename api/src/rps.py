@@ -1,4 +1,5 @@
 import json
+import html
 import asyncio
 import random
 
@@ -212,7 +213,7 @@ class Game:
                 if message is None:
                     continue
 
-                response = json.dumps({"operation": "send_message", "username": player.username, "message": message})
+                response = json.dumps({"operation": "send_message", "username": player.username, "message": html.escape(message)})
                 await player.connection.send_text(response)
                 await opponent.connection.send_text(response)
             elif operation == "send_move":
