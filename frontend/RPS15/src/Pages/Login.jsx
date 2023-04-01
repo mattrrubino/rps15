@@ -1,7 +1,37 @@
 import { useNavigate } from "react-router-dom"
 
 const Login = () => {
-    const navigate = useNavigate();
+    const navigate = useNavigate()
+
+    function onCreateAccount() {
+        navigate('../CreateAccount')
+    }
+
+    function onForgotPassword() {
+
+    }
+
+    function onSubmit() {
+        var xhr = new XMLHttpRequest()
+        xhr.open("POST", "/api/login")
+
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState != XMLHttpRequest.DONE) {
+                return
+            }
+
+            const status = xhr.status;
+            if (status === 200) {
+                navigate("/")
+            } else {
+                alert("Incorrect username or password.")
+            }
+        }
+
+        var formData = new FormData(document.getElementById("login-form"))
+        xhr.send(formData)
+    }
+
     return (
         <div>
             <link rel="stylesheet" href="../src/Pages/Login.css" />
@@ -13,7 +43,7 @@ const Login = () => {
                         <p className="logo">Account Login</p>
                     </div>
 
-                    <form className="flex-item login-form" enctype='multipart/form-data'>
+                    <form className="flex-item login-form" id="login-form">
                         <div className="flex-item">
                             <label htmlFor="username">Username:</label>
                             <input
@@ -37,15 +67,15 @@ const Login = () => {
                         </div>
                         <br/>
                         <div className="flex-item button-flex-container">
-                            <button type="button" id="create-account" className="form-button" onClick={() => navigate('../CreateAccount')}>
+                            <button type="button" id="create-account" className="form-button" onClick={onCreateAccount}>
                             Create Account
                             </button>
 
-                            <button type="submit" id="submit" className="form-button">
+                            <button type="button" id="submit" className="form-button" onClick={onSubmit}>
                             Submit
                             </button>
 
-                            <button type="submit" id="forgot-password" className="form-button">
+                            <button type="button" id="forgot-password" className="form-button" onClick={onForgotPassword}>
                             Forgot Password
                             </button>
                         </div>
