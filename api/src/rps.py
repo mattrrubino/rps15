@@ -39,16 +39,21 @@ class Round:
     def __init__(self, number: int) -> None:
         self.number = number
         self.moves = {}
+        self.done = asyncio.Queue(maxsize=-1)
 
-    def setPlayerMove(self, player: Player, move: int) -> None:
+    async def setPlayerMove(self, player: Player, move: int) -> None:
         if player not in self.moves and move >= 0 and move < len(MOVES):
             self.moves[player] = move
+
+            # Mark round as done
+            if len(self.moves) > 1:
+                await self.done.put(True)
 
     def getWinnerLoser(self) -> tuple:
         (p0, mp0), (p1, mp1) = self.moves.items()
 
         if mp0 == mp1:
-            return None
+            return None, None
 
         if mp0 < mp1:
             return (p0,p1) if (mp1-mp0 <= 7) else (p1,p0)
@@ -56,6 +61,9 @@ class Round:
             return (p1,p0) if (mp0-mp1 <= 7) else (p0,p1)
 
     def getOutcomeMessage(self, winningMoveIndex: int, losingMoveIndex: int) -> str:
+        if winningMoveIndex is None and losingMoveIndex is None:
+            return "IT'S A TIE"
+
         winningMove = MOVES[winningMoveIndex]
         losingMove = MOVES[losingMoveIndex]
 
@@ -63,17 +71,15 @@ class Round:
         if not verb:
             verb = VERBS[winningMove].get("default")
 
-        message = f"{winningMove} {verb} {losingMove}".upper()
+        return f"{winningMove} {verb} {losingMove}".upper()
 
-        return message
-
-    def getOutcome(self, playerA: Player, playerB: Player) -> RoundOutcome:
+    async def getOutcome(self, playerA: Player, playerB: Player) -> RoundOutcome:
         # Sets moves to random if they are not initialized
-        self.setPlayerMove(playerA, random.randint(0, len(MOVES)-1))
-        self.setPlayerMove(playerB, random.randint(0, len(MOVES)-1))
+        await self.setPlayerMove(playerA, random.randint(0, len(MOVES)-1))
+        await self.setPlayerMove(playerB, random.randint(0, len(MOVES)-1))
 
         winner, loser = self.getWinnerLoser()
-        message = self.getOutcomeMessage(self.moves[winner], self.moves[loser])
+        message = self.getOutcomeMessage(self.moves[winner] if winner else None, self.moves[loser] if loser else None)
 
         return RoundOutcome(self.moves[playerA], self.moves[playerB], message, winner, loser)
 
@@ -136,10 +142,12 @@ class Game:
         await self.playerA.connection.send_text(msg)
         await self.playerB.connection.send_text(msg)
 
-        # TODO: Exit early if both players have selected
-        await asyncio.sleep(5)
+        # Waits for the round to finish (both players lock a move)
+        # Forces round finish after "timeout" seconds
+        doneTask = asyncio.create_task(self.round.done.get())
+        await asyncio.wait([doneTask], timeout=16)
 
-        outcome = self.round.getOutcome(self.playerA, self.playerB)
+        outcome = await self.round.getOutcome(self.playerA, self.playerB)
 
         incrementUserMove(self.playerA.username, MOVES[outcome.playerAMove])
         incrementUserMove(self.playerB.username, MOVES[outcome.playerBMove])
@@ -207,7 +215,7 @@ class Game:
                 if move is None or move < 0 or move >= len(MOVES):
                     continue
 
-                self.round.setPlayerMove(player, move)
+                await self.round.setPlayerMove(player, move)
             else:
                 # Unknown operation sent
                 pass
