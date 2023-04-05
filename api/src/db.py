@@ -1,7 +1,7 @@
 import secrets
 from typing import Optional
 from pymongo import MongoClient
-from src.rps import MOVES
+from src.data import MOVES
 
 
 # TODO: Change to "mongo"
@@ -33,6 +33,27 @@ def createUser(username: str, password: str) -> dict:
     }
 
     return user.insert_one(userData)
+
+
+def incrementUserWins(username: str) -> None:
+    user.update_one(
+        {"Username": username},
+        { "$inc": { "Wins": 1 } },
+    )
+
+
+def incrementUserLosses(username: str) -> None:
+    user.update_one(
+        {"Username": username},
+        { "$inc": { "Losses": 1 } },
+    )
+
+
+def incrementUserMove(username: str, move: str) -> None:
+    user.update_one(
+        {"Username": username},
+        { "$inc": { f"MoveCounts.{move}": 1 } },
+    )
 
 #endregion
 
