@@ -14,11 +14,12 @@ class Player:
 
 
 class RoundOutcome:
-    def __init__(self, playerAMove: int, playerBMove: int, message: str, winner: Player) -> None:
+    def __init__(self, playerAMove: int, playerBMove: int, message: str, winner: Player, loser: Player) -> None:
         self.playerAMove = playerAMove
         self.playerBMove = playerBMove
         self.message = message
         self.winner = winner
+        self.loser = loser
 
     def toMessage(self, playerA: bool) -> str:
         obj = {
@@ -29,6 +30,7 @@ class RoundOutcome:
         }
         if self.winner:
             obj["winner"] = self.winner.username
+            obj["loser"] = self.loser.username
         
         return json.dumps(obj)
 
@@ -73,7 +75,7 @@ class Round:
         winner, loser = self.getWinnerLoser()
         message = self.getOutcomeMessage(self.moves[winner], self.moves[loser])
 
-        return RoundOutcome(self.moves[playerA], self.moves[playerB], message, winner)
+        return RoundOutcome(self.moves[playerA], self.moves[playerB], message, winner, loser)
 
 
 class Game:
