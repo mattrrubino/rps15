@@ -1,7 +1,7 @@
 import secrets
 from typing import Optional
 from pymongo import MongoClient
-from src.data import MOVES
+from data import MOVES
 
 
 # TODO: Change to "mongo"

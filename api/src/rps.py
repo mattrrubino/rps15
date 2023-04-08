@@ -2,8 +2,8 @@ import json
 import html
 import asyncio
 import random
-from src.data import MOVES, VERBS
-from src.db import incrementUserWins, incrementUserLosses, incrementUserMove
+from data import MOVES, VERBS
+from db import incrementUserWins, incrementUserLosses, incrementUserMove
 
 
 class Player:

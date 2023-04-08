@@ -1,10 +1,11 @@
+import uvicorn
 import bcrypt
 import html
 from fastapi import FastAPI, Response, WebSocket, Form, Cookie
-from src.validators import validUsername, validPassword
-from src.db import getUser, createUser, getSessionUsername, createSession, deleteSession
-from src.ds import Matcher
-from src.rps import Player
+from validators import validUsername, validPassword
+from db import getUser, createUser, getSessionUsername, createSession, deleteSession
+from ds import Matcher
+from rps import Player
 
 
 app = FastAPI()
@@ -117,3 +118,7 @@ async def matchmaking(ws: WebSocket, response: Response, token: str = Cookie()):
     await matcher.match(player)
 
 #endregion
+
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", reload=True)

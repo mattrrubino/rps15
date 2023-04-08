@@ -1,6 +1,6 @@
 import asyncio
 import threading
-from src.rps import Player, Game
+from rps import Player, Game
 
 
 class Matcher:
