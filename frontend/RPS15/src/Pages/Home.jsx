@@ -8,6 +8,14 @@ export default function Home() {
     navigate('../login')
   }
 
+  function onPlay() {
+    navigate('../game')
+  }
+
+  function onAbout() {
+    navigate('../about')
+  }
+
   return (
     <div className="home-div">
       <div className="home-container">
@@ -17,9 +25,13 @@ export default function Home() {
           Account
         </button>
         <br/>
-        <button className='flex-item home-button'>Play</button>
+        <button className='flex-item home-button' onClick={onPlay}>
+          Play
+        </button>
         <br/>
-        <button className='flex-item home-button'>About</button>
+        <button className='flex-item home-button' onClick={onAbout}>
+          About
+        </button>
       </div>
     </div>
   );

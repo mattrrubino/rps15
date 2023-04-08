@@ -55,7 +55,12 @@ input {
     font-size: 32px;
     padding: 5px;
     color: #45A29E;
+    transition-duration: .3s;
 }
+
+.form-button:hover {
+    background-color: #4b4b4b;
+  }
 
 .button-container {
     text-align: center;

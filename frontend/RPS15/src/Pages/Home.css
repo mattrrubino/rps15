@@ -1,3 +1,8 @@
+body {
+    background-color: #0b0c10;
+    font-family: 'Inter', sans-serif;
+}
+
 .home-div{
     position: absolute;
     top: 50%;
@@ -22,7 +27,7 @@
 
 .description{
     color: #c5c6c7;
-    width: 11vw;
+    width: 12vw;
     text-align: center;
     font-style: italic;
 
