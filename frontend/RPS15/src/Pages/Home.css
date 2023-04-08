@@ -1,0 +1,44 @@
+.home-div{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.home-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.title{
+    color: #66FCF1;
+    font-size: 96px;
+    padding: 0;
+    font-style: italic;
+
+}
+
+.description{
+    color: #c5c6c7;
+    width: 11vw;
+    text-align: center;
+    font-style: italic;
+
+}
+
+.home-button{
+    transition-duration: 0.3s;
+    background-color: #1e1e1e;
+    color: #45a29e;
+    border-color: #66FCF1;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 0;
+    font-style: italic;
+}
+
+.home-button:hover {
+    background-color: #4b4b4b;
+  }
