@@ -20,7 +20,7 @@ To set up the API for development:
     - Mac/Linux: `. venv/bin/activate`
     - Windows: `call venv/Scripts/activate` (may need to call cmd first if 'call' isn't working)
 5. `pip install -r requirements.txt`
-6. `uvicorn src.main:app --reload`
+6. `python src/main.py`
 
 You should now be able to view the API documentation at <http://localhost:8000/docs>.
-Next time you want to develop, simply activate the virtual environment and run uvicorn.
+Next time you want to develop, simply activate the virtual environment and run python.

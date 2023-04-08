@@ -7,4 +7,4 @@ COPY src src
 
 EXPOSE 8000
 
-CMD [ "uvicorn", "src.main:app", "--proxy-headers", "--host", "0.0.0.0" ]
+CMD [ "python", "src/main.py" ]
