@@ -1,0 +1,56 @@
+body {
+    background-color: #0b0c10;
+    font-family: 'Inter', sans-serif;
+}
+
+.page-container{
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    align-items: center;
+    justify-content: space-between;
+    
+    width: 98%;
+    height: 98%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    border-color: red;
+    border-style: solid;
+    border-radius: 1px;
+}
+
+.round-tracker{
+    border-color: blue;
+    border-style: solid;
+    border-radius: 1px;
+}
+
+.game-message{
+    border-color: orange;
+    border-style: solid;
+    border-radius: 1px;
+}
+
+.game-container{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-around;
+
+    border-color: green;
+    border-style: solid;
+    border-radius: 1px;
+}
+
+.select-sign{
+    background: #1e1e1e;
+    color: #4bbab2;
+}
+
+.chat-container{
+    border-color: yellow;
+    border-style: solid;
+    border-radius: 1px;
+}
