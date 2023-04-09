@@ -119,8 +119,8 @@ class Game:
     async def endSequence(self, winner: Player, loser: Player) -> None:
         msg = json.dumps({"operation": "end_game", "winner": winner.username, "loser": loser.username})
 
-        incrementUserWins(winner.username)
-        incrementUserLosses(loser.username)
+        await incrementUserWins(winner.username)
+        await incrementUserLosses(loser.username)
 
         # Try sending on A's connection
         try:
@@ -149,8 +149,8 @@ class Game:
 
         outcome = await self.round.getOutcome(self.playerA, self.playerB)
 
-        incrementUserMove(self.playerA.username, MOVES[outcome.playerAMove])
-        incrementUserMove(self.playerB.username, MOVES[outcome.playerBMove])
+        await incrementUserMove(self.playerA.username, MOVES[outcome.playerAMove])
+        await incrementUserMove(self.playerB.username, MOVES[outcome.playerBMove])
 
         await self.playerA.connection.send_text(outcome.toMessage(True))
         await self.playerB.connection.send_text(outcome.toMessage(False))
