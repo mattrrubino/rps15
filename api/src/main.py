@@ -96,6 +96,30 @@ async def user(response: Response, username: str) -> dict:
 
     return user
 
+@app.get("/user")
+async def user(response: Response, token: str = Cookie()) -> dict:
+    # Cannot get user information with invalid session token
+    username = await getSessionUsername(token)
+    if username is None:
+        response.status_code = 401
+        return "Unauthorized"
+
+    # Cannot look up invalid username
+    if not validUsername(username):
+        response.status_code = 400
+        return "Bad Request"
+
+    # Cannot look up user that does not exist
+    user = await getUser(username)
+    if not user:
+        response.status_code = 404
+        return "Not Found"
+
+    # Do not expose user's password hash publicly
+    del user["Password"]
+
+    return user
+
 #endregion
 
 
