@@ -1,11 +1,11 @@
 import secrets
 from typing import Optional
-from pymongo import MongoClient
+from motor.motor_asyncio import AsyncIOMotorClient
 from data import MOVES
 
 
 # TODO: Change to "mongo"
-client = MongoClient("localhost")
+client = AsyncIOMotorClient("localhost")
 rps = client["RPS"]
 
 user = rps["User"]
@@ -14,15 +14,15 @@ session = rps["Session"]
 
 #region User Data
 
-def getUser(username: str) -> Optional[dict]:
-    userData = user.find_one({"Username": username})
+async def getUser(username: str) -> Optional[dict]:
+    userData = await user.find_one({"Username": username})
     if userData:
         del userData["_id"]
 
     return userData
 
 
-def createUser(username: str, password: str) -> dict:
+async def createUser(username: str, password: str) -> dict:
     userData = {
         "Username": username,
         "Password": password,
@@ -32,25 +32,25 @@ def createUser(username: str, password: str) -> dict:
         "MoveCounts": {move: 0 for move in MOVES}
     }
 
-    return user.insert_one(userData)
+    return await user.insert_one(userData)
 
 
-def incrementUserWins(username: str) -> None:
-    user.update_one(
+async def incrementUserWins(username: str) -> None:
+    await user.update_one(
         {"Username": username},
         { "$inc": { "Wins": 1 } },
     )
 
 
-def incrementUserLosses(username: str) -> None:
-    user.update_one(
+async def incrementUserLosses(username: str) -> None:
+    await user.update_one(
         {"Username": username},
         { "$inc": { "Losses": 1 } },
     )
 
 
-def incrementUserMove(username: str, move: str) -> None:
-    user.update_one(
+async def incrementUserMove(username: str, move: str) -> None:
+    await user.update_one(
         {"Username": username},
         { "$inc": { f"MoveCounts.{move}": 1 } },
     )
@@ -60,22 +60,22 @@ def incrementUserMove(username: str, move: str) -> None:
 
 #region Session Data
 
-def getSessionUsername(token: str) -> Optional[str]:
-    sessionData = session.find_one({"Token": token})
+async def getSessionUsername(token: str) -> Optional[str]:
+    sessionData = await session.find_one({"Token": token})
     if sessionData:
         return sessionData["Username"]
     return sessionData
 
 
-def deleteSession(token: str) -> None:
-    session.delete_many({"Token": token})
+async def deleteSession(token: str) -> None:
+    await session.delete_many({"Token": token})
 
 
-def createSession(username: str) -> str:
-    deleteSession(username)
+async def createSession(username: str) -> str:
+    await deleteSession(username)
 
     token = secrets.token_urlsafe(32)
-    session.insert_one({"Username": username, "Token": token})
+    await session.insert_one({"Username": username, "Token": token})
 
     return token
 

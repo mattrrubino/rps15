@@ -24,17 +24,18 @@ async def register(response: Response, username: str = Form(), password: str = F
     username = html.escape(username)
 
     # Cannot register a username that already exists
-    if getUser(username) is not None:
+    user = await getUser(username)
+    if user is not None:
         response.status_code = 409
         return "Conflict"
 
     # Create user data
     salt = bcrypt.gensalt()
     hashedPassword = bcrypt.hashpw(password.encode(), salt)
-    createUser(username, hashedPassword)
+    await createUser(username, hashedPassword)
 
     # Create session data
-    token = createSession(username)
+    token = await createSession(username)
     response.set_cookie("token", token, httponly=True, expires=2**30)
 
 
@@ -46,7 +47,7 @@ async def login(response: Response, username: str = Form(), password: str = Form
         return "Bad Request"
 
     # Cannot log in with username that does not exist
-    user = getUser(username)
+    user = await getUser(username)
     if not user:
         response.status_code = 404
         return "Not Found"
@@ -58,14 +59,14 @@ async def login(response: Response, username: str = Form(), password: str = Form
         return "Forbidden"
 
     # Create session data
-    token = createSession(username)
+    token = await createSession(username)
     response.set_cookie("token", token, httponly=True, expires=2**30)
 
 
 @app.post("/logout")
 async def logout(response: Response, token: str = Cookie()):
     # Revoke session data
-    deleteSession(token)
+    await deleteSession(token)
     response.delete_cookie("token", httponly=True)
 
     # Redirect to login page
@@ -85,7 +86,31 @@ async def user(response: Response, username: str) -> dict:
         return "Bad Request"
 
     # Cannot look up user that does not exist
-    user = getUser(username)
+    user = await getUser(username)
+    if not user:
+        response.status_code = 404
+        return "Not Found"
+
+    # Do not expose user's password hash publicly
+    del user["Password"]
+
+    return user
+
+@app.get("/user")
+async def user(response: Response, token: str = Cookie()) -> dict:
+    # Cannot get user information with invalid session token
+    username = await getSessionUsername(token)
+    if username is None:
+        response.status_code = 401
+        return "Unauthorized"
+
+    # Cannot look up invalid username
+    if not validUsername(username):
+        response.status_code = 400
+        return "Bad Request"
+
+    # Cannot look up user that does not exist
+    user = await getUser(username)
     if not user:
         response.status_code = 404
         return "Not Found"
@@ -105,7 +130,7 @@ matcher = Matcher()
 @app.websocket("/game")
 async def matchmaking(ws: WebSocket, response: Response, token: str = Cookie()):
     # Cannot connect to matchmaking with invalid session token
-    username = getSessionUsername(token)
+    username = await getSessionUsername(token)
     if username is None:
         await ws.close()
         response.status_code = 403
