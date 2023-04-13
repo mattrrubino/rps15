@@ -2,6 +2,7 @@ import React from 'react'
 import './Game.css'
 import { useState } from 'react'
 import Select from 'react-select';
+import PieChart from '../components/PieChart'
 
 const Game = () => {
   const [round, setRound] = useState(1);
@@ -70,7 +71,9 @@ const Game = () => {
         </div>
         <div className='game-container page-item'>
           <div className='player-side game-item'>
-            {player}:{playerScore}
+          <div className='opponent-score'>
+              {player}: {playerScore}
+            </div>
             <Select 
               styles={selectStyles}
               className='select-sign'
@@ -80,7 +83,12 @@ const Game = () => {
             />
           </div>
           <div className='opponent-side game-item'>
-            {opponent}:{opponentScore}
+            <div className='opponent-score'>
+              {opponent}: {opponentScore}
+            </div>
+            <div className='chart'>
+              <PieChart/>
+            </div>
           </div>
         </div>
         <div className='chat-container page-item'>
