@@ -28,7 +28,7 @@ body {
 
 .logo{
     color: #66FCF1;
-    font-size: 96px;
+    font-size: max(5vw, 40px);
     font-weight: bold;
     font-style: italic;
     padding: 0%;
@@ -37,7 +37,7 @@ body {
 label {
     font-style: italic;
     font-family: 'Inter', sans-serif;
-    font-size: 32px;
+    font-size: max(2vw, 20px);
     display: block;
 }
 
@@ -45,8 +45,9 @@ input {
     border: 1px solid #66FCF1;
     border-radius: 0%;
     height: 40px;
-    font-size: 32px;
+    font-size: max(2vw, 20px);
     width: 99%;
+    
 }
 
 .button-flex-container {
@@ -61,7 +62,7 @@ input {
     font-style: italic;
     border: 1px solid #66FCF1;
     border-radius: 0%;
-    font-size: 32px;
+    font-size: max(2vw, 20px);
     padding: 5px;
     color: #45A29E;
     transition-duration: .3s;

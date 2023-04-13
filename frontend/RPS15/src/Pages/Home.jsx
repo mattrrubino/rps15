@@ -19,8 +19,10 @@ export default function Home() {
   return (
     <div className="home-div">
       <div className="home-container">
-        <p className='flex-item title'>RPS-15</p>
+        <div className='flex-item title'>RPS-15</div>
+        <br/>
         <p className='flex-item description'>Welcom to RPS-15, a modern take on the classic rock-paper-scissors game</p>
+        <br/>
         <button className='flex-item home-button' onClick={onAccount}>
           Account
         </button>

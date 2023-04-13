@@ -44,8 +44,10 @@ const CreateAccount = () => {
         <div className="create-flex-container">
 
           <div className="flex-item">
-            <p className="logo">Account Create</p>
+            <div className="logo">Account Create</div>
           </div>
+
+          <br/>
 
           <form className="create-account-form" id="create-account-form">
             <div className="flex-item">
