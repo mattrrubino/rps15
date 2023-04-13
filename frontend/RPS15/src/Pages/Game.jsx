@@ -16,6 +16,25 @@ const Game = () => {
 
   let message = "Game Message";
 
+  // test data for the pie chart
+  let testdata = {
+    "rock": 3,
+    "scissors": 5,
+    "gun": 2,
+    "banana": 8,
+    "paper": 1,
+    "1": 4,
+    "2": 15,
+    "3": 3,
+    "4": 6,
+    "5": 9,
+    "6": 3,
+    "7": 2,
+    "8": 1,
+    "9": 11,
+    "0": 20,
+  }
+
   const options = [
     {value: "Rock", label: "Rock"},
     {value: "Fire", label: "Fire"},
@@ -87,7 +106,7 @@ const Game = () => {
               {opponent}: {opponentScore}
             </div>
             <div className='chart'>
-              <PieChart test="foo"/>
+              <PieChart data={testdata}/>
             </div>
           </div>
         </div>

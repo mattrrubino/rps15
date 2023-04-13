@@ -1,38 +1,32 @@
 import React from "react";
 import { VictoryPie } from "victory-pie";
 
-
+// Takes one prop, data, which is a dictionary of the moves and how many times they've been used
 function App (props) {
-// const App = (props) => {
-    const myData = [
-        { x: props.test, y: 900 },
-        { x: "Group B", y: 400 },
-        { x: "Group C", y: 300 },
-    ];
 
+  function populateData (data) {
     let Data = [];
 
-    function populateData (data) {
-        for (const key in data){
-            Data.concat(
-                { x: key, y: data[key]}
-            )
-        }
+    for (const key in data){
+      Data.push({ x: key, y: data[key]})
     }
-      
-    const style = {
-        data: {
-        fillOpacity: 0.9, stroke: "#45A29E", strokeWidth: 2
-        },
-        labels: {
-        fontSize: 15, fill: "#66FCF1"
-        }
+    
+    return Data;
+  }
+    
+  const style = {
+    data: {
+      fillOpacity: 0.9, stroke: "#45A29E", strokeWidth: 2
+    },
+    labels: {
+      fontSize: 15, fill: "#66FCF1"
     }
+  }
 
   return (
     <div>
       <VictoryPie
-        data={myData}
+        data={populateData(props.data)}
         style={style}
         colorScale="qualitative"
         radius={100}
