@@ -1,22 +1,34 @@
 import React from "react";
 import { VictoryPie } from "victory-pie";
 
-const myData = [
-  { x: "Group A", y: 900 },
-  { x: "Group B", y: 400 },
-  { x: "Group C", y: 300 },
-];
 
-const style = {
-    data: {
-      fillOpacity: 0.9, stroke: "#45A29E", strokeWidth: 2
-    },
-    labels: {
-      fontSize: 15, fill: "#66FCF1"
+function App (props) {
+// const App = (props) => {
+    const myData = [
+        { x: props.test, y: 900 },
+        { x: "Group B", y: 400 },
+        { x: "Group C", y: 300 },
+    ];
+
+    let Data = [];
+
+    function populateData (data) {
+        for (const key in data){
+            Data.concat(
+                { x: key, y: data[key]}
+            )
+        }
     }
-  }
+      
+    const style = {
+        data: {
+        fillOpacity: 0.9, stroke: "#45A29E", strokeWidth: 2
+        },
+        labels: {
+        fontSize: 15, fill: "#66FCF1"
+        }
+    }
 
-const App = () => {
   return (
     <div>
       <VictoryPie

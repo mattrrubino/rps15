@@ -87,7 +87,7 @@ const Game = () => {
               {opponent}: {opponentScore}
             </div>
             <div className='chart'>
-              <PieChart/>
+              <PieChart test="foo"/>
             </div>
           </div>
         </div>
