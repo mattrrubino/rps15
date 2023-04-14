@@ -7,11 +7,12 @@ import PieChart from '../components/PieChart'
 const Game = () => {
   const [round, setRound] = useState(1);
   const [player, setPlayer] = useState("Player");
+  const [message, setMessage] = useState("");
   const [messages, setMessages] = useState("So Empty");
   const [playerScore, setPlayerScore] = useState(0);
   const [opponent, setOpponent] = useState("Opponent");
   const [opponentScore, setOpponentScore] = useState(0);
-  const [message, setMessage] = useState("Game Message");
+  const [gameMessage, setGameMessage] = useState("Game Message");
   const [selectedOption, setSelectedOption] = useState("Select your sign"); // for dropdown selection
 
   // Create websocket connection
@@ -25,6 +26,14 @@ const Game = () => {
       // Create an interval to send echo messages to the server
       interval: setInterval(() => ws.send('echo'), 1000)
     })
+  }
+
+  // For submitting chats
+  const onSubmit = (e) => {
+    e.preventDefault();
+  
+    console.log("Message Sent: " + message);
+    setMessage('');
   }
 
   // test data for the pie chart
@@ -98,7 +107,7 @@ const Game = () => {
           Round {round}
         </div>
         <div className='game-message page-item'>
-          {message}
+          {gameMessage}
         </div>
         <div className='game-container page-item'>
           <div className='player-side game-item'>
@@ -126,16 +135,18 @@ const Game = () => {
           <div className='chat-display'>
             {messages}
           </div>
-          <div className='chat-input'>
+          <form className='chat-input' onSubmit={onSubmit}>
             <label htmlFor='message'></label>
             <input 
               type="text"
               id='message'
               name='message'
               className='message-input'
-              defaultValue="Message"
+              value={message}
+              placeholder='Message: (Enter to submit)'
+              onChange={(e) => setMessage(e.target.value)}
             />
-          </div>
+          </form>
         </div>
       </div>
     </div>
