@@ -9,10 +9,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "antd": "^5.4.2",
+    "http": "^0.0.1-security",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.10.0",
-    "victory-pie": "^36.6.8"
+    "react-scripts": "^5.0.1",
+    "victory-pie": "^36.6.8",
+    "websocket": "^1.0.34",
+    "websockets": "^0.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",

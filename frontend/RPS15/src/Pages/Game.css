@@ -61,9 +61,19 @@ body {
     /* border-color: yellow;
     border-style: solid;
     border-radius: 1px; */
-    width: 30vw;
+    width: max(30vw, 200px);
     height: 20vh;
+}
+
+.chat-display{
+    width: 100%;
+    height: 85%;
     background-color: #1e1e1e;
+    border:#4bbab2 2px solid;
+}
+
+.message-input{
+    width: 99%;
 }
 
 .opponent-side {

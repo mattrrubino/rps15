@@ -7,14 +7,25 @@ import PieChart from '../components/PieChart'
 const Game = () => {
   const [round, setRound] = useState(1);
   const [player, setPlayer] = useState("Player");
-  const [opponent, setOpponent] = useState("Opponent");
+  const [messages, setMessages] = useState("So Empty");
   const [playerScore, setPlayerScore] = useState(0);
+  const [opponent, setOpponent] = useState("Opponent");
   const [opponentScore, setOpponentScore] = useState(0);
+  const [message, setMessage] = useState("Game Message");
+  const [selectedOption, setSelectedOption] = useState("Select your sign"); // for dropdown selection
 
-
-  const [selectedOption, setSelectedOption] = useState("Select your sign");
-
-  let message = "Game Message";
+  // Create websocket connection
+  function componentDidMount() {
+    const ws = new WebSocket('ws://localhost:8000/ws')
+    // Callback when a message is received
+    ws.onmessage = this.onMessage
+    
+    this.setState({
+      ws: ws,
+      // Create an interval to send echo messages to the server
+      interval: setInterval(() => ws.send('echo'), 1000)
+    })
+  }
 
   // test data for the pie chart
   let testdata = {
@@ -26,7 +37,7 @@ const Game = () => {
     "1": 4,
     "2": 15,
     "3": 3,
-    "4": 6,
+    "zac": 60,
     "5": 9,
     "6": 3,
     "7": 2,
@@ -57,6 +68,7 @@ const Game = () => {
     control: (base, state) => ({
       ...base,
       background: "#1e1e1e",
+      width: "125px",
       borderRadius: state.isFocused ? "3px 3px 0 0" : 3,
       boxShadow: state.isFocused ? null : null,
       "&:hover": {
@@ -111,7 +123,19 @@ const Game = () => {
           </div>
         </div>
         <div className='chat-container page-item'>
-          Chat
+          <div className='chat-display'>
+            {messages}
+          </div>
+          <div className='chat-input'>
+            <label htmlFor='message'></label>
+            <input 
+              type="text"
+              id='message'
+              name='message'
+              className='message-input'
+              defaultValue="Message"
+            />
+          </div>
         </div>
       </div>
     </div>
