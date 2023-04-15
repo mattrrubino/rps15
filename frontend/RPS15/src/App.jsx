@@ -26,7 +26,7 @@ function App() {
           <Route path='login' element={<Login />} />
           <Route path='createaccount' element={<CreateAccount />} />
           <Route path='profile' element={<Profile />} />
-          <Route path='game' element={<Game />} />
+          <Route path='game' element={<Game />} onLeave={() => console.log("exiting")} />
           <Route path='about' element={<About />} />
         </Route>
       </Routes>

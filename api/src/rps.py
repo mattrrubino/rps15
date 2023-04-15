@@ -108,13 +108,11 @@ class Game:
                 pass
 
     async def startSequence(self):
-        msgA = json.dumps({"operation": "start_game", "opponent": self.playerB.username})
-        msgB = json.dumps({"operation": "start_game", "opponent": self.playerA.username})
+        msgA = json.dumps({"operation": "start_game", "you": self.playerA.username, "opponent": self.playerB.username})
+        msgB = json.dumps({"operation": "start_game", "you": self.playerB.username, "opponent": self.playerA.username})
 
         await self.playerA.connection.send_text(msgA)
         await self.playerB.connection.send_text(msgB)
-
-        await asyncio.sleep(5)
 
     async def endSequence(self, winner: Player, loser: Player) -> None:
         msg = json.dumps({"operation": "end_game", "winner": winner.username, "loser": loser.username})
@@ -162,9 +160,11 @@ class Game:
         await self.startSequence()
 
         while not self.isDone():
+            await asyncio.sleep(5)
             self.nextRound()
             await self.roundSequence()
 
+        await asyncio.sleep(5)
         if self.playerA.wins > self.playerB.wins:
             await self.endSequence(self.playerA, self.playerB)
         else:

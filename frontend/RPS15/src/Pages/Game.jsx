@@ -1,38 +1,78 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import './Game.css'
 import { useState } from 'react'
 import Select from 'react-select';
 import PieChart from '../components/PieChart'
+import { SetOnMessage, Send, CloseGame } from '../components/WebSocket';
+import { useNavigate } from 'react-router-dom';
 
-const Game = () => {
+const Game = (props) => {
+  const navigate = useNavigate();
+
   const [round, setRound] = useState(1);
   const [player, setPlayer] = useState("Player");
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState("So Empty");
+  const [messages, setMessages] = useState([]);
   const [playerScore, setPlayerScore] = useState(0);
   const [opponent, setOpponent] = useState("Opponent");
   const [opponentScore, setOpponentScore] = useState(0);
-  const [gameMessage, setGameMessage] = useState("Game Message");
-  const [selectedOption, setSelectedOption] = useState("Select your sign"); // for dropdown selection
+  const [gameMessage, setGameMessage] = useState("Starting game...");
+  const [selectedOption, setSelectedOption] = useState(0); // for dropdown selection
+  const [canMove, setCanMove] = useState(false);
+  const cleanupCount = useRef(0);
 
-  // Create websocket connection
-  function componentDidMount() {
-    const ws = new WebSocket('ws://localhost:8000/ws')
-    // Callback when a message is received
-    ws.onmessage = this.onMessage
-    
-    this.setState({
-      ws: ws,
-      // Create an interval to send echo messages to the server
-      interval: setInterval(() => ws.send('echo'), 1000)
-    })
+  useEffect(() => {
+    SetOnMessage(onMessage)
+    return function cleanup() {
+      if (cleanupCount.current > 0) {
+        CloseGame()
+      }
+      cleanupCount.current++
+    }
+  }, [])
+
+  useEffect(() => {
+    // Pull opponent move distribution
+    // after every round
+    console.log("get move distribution here!")
+  }, [round])
+
+  function onMessage(event) {
+    const message = JSON.parse(event.data)
+    console.log(message)
+
+    switch (message.operation) {
+      case "start_round":
+        setRound(message.number)
+        setGameMessage("Select your move")
+        setCanMove(true)
+        break
+      case "end_round":
+        setGameMessage(message.message)
+        setCanMove(false)
+        break
+      case "send_message":
+        setMessages(messages => [...messages, message])
+        break
+      case "end_game":
+        setGameMessage(`${message.winner} WINS!`)
+        setTimeout(() => navigate("/"), 5000)
+        break
+    }
+  }
+
+  const onSendMove = (e) => {
+    e.preventDefault();
+
+    Send(JSON.stringify({"operation": "send_move", "move": selectedOption.value}))
+    setCanMove(false)
   }
 
   // For submitting chats
   const onSubmit = (e) => {
     e.preventDefault();
   
-    console.log("Message Sent: " + message);
+    Send(JSON.stringify({"operation": "send_message", "message": message}))
     setMessage('');
   }
 
@@ -56,21 +96,21 @@ const Game = () => {
   }
 
   const options = [
-    {value: "Rock", label: "Rock"},
-    {value: "Fire", label: "Fire"},
-    {value: "Scissors", label: "Scissors"},
-    {value: "Snake", label: "Snake"},
-    {value: "Human", label: "Human"},
-    {value: "Tree", label: "Tree"},
-    {value: "Wolf", label: "Wolf"},
-    {value: "Sponge", label: "Sponge"},
-    {value: "Paper", label: "Paper"},
-    {value: "Air", label: "Air"},
-    {value: "Water", label: "Water"},
-    {value: "Dragon", label: "Dragon"},
-    {value: "Devil", label: "Devil"},
-    {value: "Lightning", label: "Lightning"},
-    {value: "Gun", label: "Gun"}
+    {value: 0, label: "Rock"},
+    {value: 1, label: "Fire"},
+    {value: 2, label: "Scissors"},
+    {value: 3, label: "Snake"},
+    {value: 4, label: "Human"},
+    {value: 5, label: "Tree"},
+    {value: 6, label: "Wolf"},
+    {value: 7, label: "Sponge"},
+    {value: 8, label: "Paper"},
+    {value: 9, label: "Air"},
+    {value: 10, label: "Water"},
+    {value: 11, label: "Dragon"},
+    {value: 12, label: "Devil"},
+    {value: 13, label: "Lightning"},
+    {value: 15, label: "Gun"}
   ];
 
   const selectStyles = {
@@ -121,6 +161,9 @@ const Game = () => {
               onChange={setSelectedOption}
               options={options}  
             />
+            <button onClick={onSendMove} disabled={!canMove}>
+              Send Move
+            </button>
           </div>
           <div className='opponent-side game-item'>
             <div className='opponent-score'>
@@ -133,7 +176,9 @@ const Game = () => {
         </div>
         <div className='chat-container page-item'>
           <div className='chat-display'>
-            {messages}
+            {messages.map(({ username, message }) => (
+              <div>{username}: {message}</div>
+            ))}
           </div>
           <form className='chat-input' onSubmit={onSubmit}>
             <label htmlFor='message'></label>

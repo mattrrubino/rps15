@@ -1,15 +1,35 @@
+import { useState } from 'react'
 import './Home.css'
 import { useNavigate } from "react-router-dom"
+import { OpenGame, SetOnMessage, SetOnClose, CloseGame } from '../components/WebSocket'
 
 export default function Home() {
   const navigate = useNavigate()
+  const [waiting, setWaiting] = useState(false)
 
   function onAccount() {
     navigate('../login')
   }
 
+  function onMessage(event) {
+    const message = JSON.parse(event.data)
+    if (message.operation == "start_game") {
+      // TODO: Pass player names
+      navigate('/game')
+    }
+  }
+
   function onPlay() {
-    navigate('../game')
+    OpenGame()
+
+    SetOnMessage(onMessage)
+    SetOnClose(() => setWaiting(false))
+
+    setWaiting(true)
+  }
+
+  function onCancel() {
+    CloseGame()
   }
 
   function onAbout() {
@@ -27,8 +47,8 @@ export default function Home() {
           Account
         </button>
         <br/>
-        <button className='flex-item home-button' onClick={onPlay}>
-          Play
+        <button className='flex-item home-button' onClick={waiting ? onCancel : onPlay}>
+          {waiting ? "Cancel" : "Play"}
         </button>
         <br/>
         <button className='flex-item home-button' onClick={onAbout}>

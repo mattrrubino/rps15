@@ -15,6 +15,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.10.0",
     "react-scripts": "^5.0.1",
+    "react-select": "^5.7.2",
     "victory-pie": "^36.6.8",
     "websocket": "^1.0.34",
     "websockets": "^0.2.0"

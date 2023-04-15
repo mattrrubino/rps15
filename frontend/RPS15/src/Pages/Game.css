@@ -70,6 +70,8 @@ body {
     height: 85%;
     background-color: #1e1e1e;
     border:#4bbab2 2px solid;
+    overflow-wrap: anywhere;
+    overflow-y: auto;
 }
 
 .message-input{
