@@ -28,7 +28,7 @@ const CreateAccount = () => {
             } else if (status === 409) {
                 alert("Username already registered.")
             } else {
-                alert("Username must have 1-32 characters and password must have 8-32 characters.")
+                alert("Username must have 1-32 alphanumeric characters and password must have 8-32 characters.")
             }
         }
 

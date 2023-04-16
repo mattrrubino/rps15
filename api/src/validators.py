@@ -1,5 +1,5 @@
 def validUsername(username: str) -> bool:
-    if len(username) < 1 or len(username) > 32:
+    if len(username) < 1 or len(username) > 32 or not username.isalnum():
         return False
 
     return True
