@@ -10,16 +10,31 @@ const Game = (props) => {
   const navigate = useNavigate();
 
   const [round, setRound] = useState(1);
-  const [player, setPlayer] = useState("Player");
+  const [player, setPlayer] = useState("");
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [playerScore, setPlayerScore] = useState(0);
-  const [opponent, setOpponent] = useState("Opponent");
+  const [opponent, setOpponent] = useState("");
   const [opponentScore, setOpponentScore] = useState(0);
   const [gameMessage, setGameMessage] = useState("Starting game...");
   const [selectedOption, setSelectedOption] = useState(0); // for dropdown selection
   const [canMove, setCanMove] = useState(false);
+  const [moveCounts, setMoveCounts] = useState({});
   const cleanupCount = useRef(0);
+
+  async function updateMoveDistribution() {
+    var xhr = new XMLHttpRequest()
+    xhr.open("GET", `/api/user/${opponent}`)
+
+    xhr.onreadystatechange = (e) => {
+      if (xhr.readyState === 4) {
+        const response = JSON.parse(xhr.responseText)
+        setMoveCounts(response.MoveCounts)
+      }
+    }
+
+    xhr.send()
+  }
 
   useEffect(() => {
     SetOnMessage(onMessage)
@@ -33,14 +48,13 @@ const Game = (props) => {
   }, [])
 
   useEffect(() => {
-    // Pull opponent move distribution
-    // after every round
-    console.log("get move distribution here!")
-  }, [round])
+    if (opponent !== "") {
+      updateMoveDistribution()
+    }
+  }, [opponent, round])
 
   function onMessage(event) {
     const message = JSON.parse(event.data)
-    console.log(message)
 
     switch (message.operation) {
       case "send_names":
@@ -81,25 +95,6 @@ const Game = (props) => {
   
     Send(JSON.stringify({"operation": "send_message", "message": message}))
     setMessage('');
-  }
-
-  // test data for the pie chart
-  let testdata = {
-    "rock": 3,
-    "scissors": 5,
-    "gun": 2,
-    "banana": 8,
-    "paper": 1,
-    "1": 4,
-    "2": 15,
-    "3": 3,
-    "zac": 60,
-    "5": 9,
-    "6": 3,
-    "7": 2,
-    "8": 1,
-    "9": 11,
-    "0": 20,
   }
 
   const options = [
@@ -177,14 +172,14 @@ const Game = (props) => {
               {opponent}: {opponentScore}
             </div>
             <div className='chart'>
-              <PieChart data={testdata}/>
+              <PieChart data={moveCounts} />
             </div>
           </div>
         </div>
         <div className='chat-container page-item'>
           <div className='chat-display'>
-            {messages.map(({ username, message }) => (
-              <div>{username}: {message}</div>
+            {messages.map(({ username, message }, i) => (
+              <div key={i}>{username}: {message}</div>
             ))}
           </div>
           <form className='chat-input' onSubmit={onSubmit}>
