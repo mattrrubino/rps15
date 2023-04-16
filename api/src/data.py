@@ -18,6 +18,6 @@ VERBS = {
     "water": {"rock": "erodes", "fire": "puts out", "scissors": "rusts", "gun": "rusts", "lightning": "conducts", "default": "drowns"},
     "dragon": {"devil": "commands", "lightning": "breathes", "fire": "breathes", "rock": "rests on", "snake": "spawns", "default": "is immune to"},
     "devil": {"rock": "hurls", "fire": "breathes", "lightning": "casts", "snakes": "eats", "human": "possesses", "default": "is immune to"},
-    "lightning": {"gun": "melts", "scissors": "melts", "rock": "splits", "tree": "splits", "fire": "starts", "defautl": "strikes"},
+    "lightning": {"gun": "melts", "scissors": "melts", "rock": "splits", "tree": "splits", "fire": "starts", "default": "strikes"},
     "gun": {"rock": "targets", "tree": "targets", "fire": "targets", "scissors": "outclasses", "default": "shoots"},
 }

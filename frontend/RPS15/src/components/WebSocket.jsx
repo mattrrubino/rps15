@@ -5,10 +5,8 @@ function OpenGame() {
     if (game)
         CloseGame()
 
-    // TODO: Might need to change this to /api/game in production
-    // For some reason, Vite WebSocket proxies do not work :(
-    // (I intentionally removed it from the config b/c it was not working)
-    game = new WebSocket("ws://localhost:8000/game")
+    const protocol = window.location.protocol === "https:" ? "wss://" : "ws://"
+    game = new WebSocket(protocol + window.location.hostname + "/api/game")
 }
 
 function SetOnMessage(handler) {

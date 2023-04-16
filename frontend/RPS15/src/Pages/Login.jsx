@@ -1,3 +1,4 @@
+import './Login.css'
 import { useNavigate } from "react-router-dom"
 
 const Login = () => {
@@ -34,7 +35,6 @@ const Login = () => {
 
     return (
         <div>
-            <link rel="stylesheet" href="../src/Pages/Login.css" />
             <div className="login-container">
 
                 <div className="login-flex-container">

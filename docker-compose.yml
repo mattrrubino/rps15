@@ -2,10 +2,17 @@ version: "3.9"
 services:
   mongo:
     image: mongo:latest
+  nginx:
+    image: nginx:latest
+    ports:
+      - 80:80
+      - 443:443
+    restart: always
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./frontend/RPS15/dist:/var/www/html:ro
   api:
     build: api
-    ports:
-      - "80:8000"
     depends_on:
       mongo:
         condition: service_started
