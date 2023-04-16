@@ -8,8 +8,8 @@ export default defineConfig({
     proxy: {
       "/api/game": {
         target: "ws://127.0.0.1:8000",
-        ws: true,
         rewrite: () => "/game",
+        ws: true,
       },
 
       "/api": {
