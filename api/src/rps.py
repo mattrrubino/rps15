@@ -21,7 +21,7 @@ class RoundOutcome:
         self.winner = winner
         self.loser = loser
 
-    def toMessage(self, playerA: bool) -> str:
+    def toMessage(self, playerA: bool) -> dict:
         obj = {
             "operation": "end_round",
             "move": self.playerAMove if playerA else self.playerBMove,
@@ -32,7 +32,7 @@ class RoundOutcome:
             obj["winner"] = self.winner.username
             obj["loser"] = self.loser.username
         
-        return json.dumps(obj)
+        return obj
 
 
 class Round:
@@ -108,8 +108,8 @@ class Game:
                 pass
 
     async def startSequence(self):
-        msgA = json.dumps({"operation": "start_game", "you": self.playerA.username, "opponent": self.playerB.username})
-        msgB = json.dumps({"operation": "start_game", "you": self.playerB.username, "opponent": self.playerA.username})
+        msgA = json.dumps({"operation": "start_game"})
+        msgB = json.dumps({"operation": "start_game"})
 
         await self.playerA.connection.send_text(msgA)
         await self.playerB.connection.send_text(msgB)
@@ -150,11 +150,21 @@ class Game:
         await incrementUserMove(self.playerA.username, MOVES[outcome.playerAMove])
         await incrementUserMove(self.playerB.username, MOVES[outcome.playerBMove])
 
-        await self.playerA.connection.send_text(outcome.toMessage(True))
-        await self.playerB.connection.send_text(outcome.toMessage(False))
-
         if outcome.winner:
             outcome.winner.wins += 1
+
+        msgA = outcome.toMessage(True)
+        msgA["you"] = self.playerA.wins
+        msgA["opponent"] = self.playerB.wins
+        msgA = json.dumps(msgA)
+
+        msgB = outcome.toMessage(False)
+        msgB["you"] = self.playerB.wins
+        msgB["opponent"] = self.playerA.wins
+        msgB = json.dumps(msgB)
+
+        await self.playerA.connection.send_text(msgA)
+        await self.playerB.connection.send_text(msgB)
 
     async def handleGame(self):
         await self.startSequence()
@@ -209,6 +219,9 @@ class Game:
                 response = json.dumps({"operation": "send_message", "username": player.username, "message": html.escape(message)})
                 await player.connection.send_text(response)
                 await opponent.connection.send_text(response)
+            elif operation == "get_names":
+                response = json.dumps({"operation": "send_names", "you": player.username, "opponent": opponent.username})
+                await player.connection.send_text(response)
             elif operation == "send_move":
                 # Ignore move if index is not supplied or is invalid
                 move = obj.get("move")

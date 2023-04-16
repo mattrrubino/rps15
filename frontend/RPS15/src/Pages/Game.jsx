@@ -23,6 +23,7 @@ const Game = (props) => {
 
   useEffect(() => {
     SetOnMessage(onMessage)
+    Send(JSON.stringify({"operation": "get_names"}))
     return function cleanup() {
       if (cleanupCount.current > 0) {
         CloseGame()
@@ -42,6 +43,10 @@ const Game = (props) => {
     console.log(message)
 
     switch (message.operation) {
+      case "send_names":
+        setPlayer(message.you)
+        setOpponent(message.opponent)
+        break
       case "start_round":
         setRound(message.number)
         setGameMessage("Select your move")
@@ -50,6 +55,8 @@ const Game = (props) => {
       case "end_round":
         setGameMessage(message.message)
         setCanMove(false)
+        setPlayerScore(message.you)
+        setOpponentScore(message.opponent)
         break
       case "send_message":
         setMessages(messages => [...messages, message])
