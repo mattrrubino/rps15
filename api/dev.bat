@@ -1,2 +1,2 @@
 call venv/Scripts/activate
-python src/main.py
+python src/main.py dev

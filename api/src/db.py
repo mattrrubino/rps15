@@ -2,10 +2,11 @@ import secrets
 from typing import Optional
 from motor.motor_asyncio import AsyncIOMotorClient
 from data import MOVES
+from cli import DEV
 
 
-# TODO: Change to "mongo"
-client = AsyncIOMotorClient("localhost")
+hostname = "localhost" if DEV else "mongo"
+client = AsyncIOMotorClient(hostname)
 rps = client["RPS"]
 
 user = rps["User"]

@@ -1,2 +1,2 @@
 source venv/bin/activate
-uvicorn src.main:app --reload
+python src/main.py dev
