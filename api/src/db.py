@@ -1,4 +1,5 @@
 import secrets
+from bcrypt import hashpw, gensalt
 from typing import Optional
 from motor.motor_asyncio import AsyncIOMotorClient
 from data import MOVES
@@ -26,7 +27,7 @@ async def getUser(username: str) -> Optional[dict]:
 async def createUser(username: str, password: str) -> dict:
     userData = {
         "Username": username,
-        "Password": password,
+        "Password": hashpw(password.encode(), gensalt()),
         "Wins": 0,
         "Losses": 0,
         "Elo": 1000,
@@ -61,22 +62,24 @@ async def incrementUserMove(username: str, move: str) -> None:
 
 #region Session Data
 
+TOKEN_SALT = b"$2b$12$oj9ykuhb.PVGfzyFB8UeMe"
+
 async def getSessionUsername(token: str) -> Optional[str]:
-    sessionData = await session.find_one({"Token": token})
+    sessionData = await session.find_one({"Token": hashpw(token.encode(), TOKEN_SALT)})
     if sessionData:
         return sessionData["Username"]
     return sessionData
 
 
 async def deleteSession(token: str) -> None:
-    await session.delete_many({"Token": token})
+    await session.delete_many({"Token": hashpw(token.encode(), TOKEN_SALT)})
 
 
 async def createSession(username: str) -> str:
     await deleteSession(username)
 
     token = secrets.token_urlsafe(32)
-    await session.insert_one({"Username": username, "Token": token})
+    await session.insert_one({"Username": username, "Token": hashpw(token.encode(), TOKEN_SALT)})
 
     return token
 

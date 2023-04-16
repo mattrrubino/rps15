@@ -1,6 +1,6 @@
 import uvicorn
-import bcrypt
 import html
+from bcrypt import checkpw
 from fastapi import FastAPI, Response, WebSocket, Form, Cookie
 from validators import validUsername, validPassword
 from db import getUser, createUser, getSessionUsername, createSession, deleteSession
@@ -31,9 +31,7 @@ async def register(response: Response, username: str = Form(), password: str = F
         return "Conflict"
 
     # Create user data
-    salt = bcrypt.gensalt()
-    hashedPassword = bcrypt.hashpw(password.encode(), salt)
-    await createUser(username, hashedPassword)
+    await createUser(username, password)
 
     # Create session data
     token = await createSession(username)
@@ -55,7 +53,7 @@ async def login(response: Response, username: str = Form(), password: str = Form
 
     # Cannot log in with incorrect password
     hashedPassword = user["Password"]
-    if not bcrypt.checkpw(password.encode(), hashedPassword):
+    if not checkpw(password.encode(), hashedPassword):
         response.status_code = 403
         return "Forbidden"
 
