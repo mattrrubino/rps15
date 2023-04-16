@@ -10,7 +10,7 @@ services:
     restart: always
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./frontend/RPS15/dist:/var/www/html:ro
+      - ./frontend/dist:/var/www/html:ro
   api:
     build: api
     depends_on:

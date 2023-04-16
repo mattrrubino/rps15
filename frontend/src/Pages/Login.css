@@ -1,0 +1,73 @@
+body {
+    background-color: #0b0c10;
+    font-family: 'Inter', sans-serif;
+}
+
+.login-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.login-flex-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-form{
+    width: 100%;
+}
+
+.flex-item {
+    color: #c5c6c7;
+    font-family: 'Inter', sans-serif;
+}
+
+.logo{
+    color: #66FCF1;
+    font-size: max(5vw, 40px);
+    font-weight: bold;
+    font-style: italic;
+    padding: 0%;
+}
+
+label {
+    font-style: italic;
+    font-family: 'Inter', sans-serif;
+    font-size: max(2vw, 20px);
+    display: block;
+}
+
+input {
+    border: 1px solid #66FCF1;
+    border-radius: 0%;
+    height: 40px;
+    font-size: max(2vw, 20px);
+    width: 99%;
+    
+}
+
+.button-flex-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.form-button {
+    font-family: 'Inter', sans-serif;
+    font-style: italic;
+    border: 1px solid #66FCF1;
+    border-radius: 0%;
+    font-size: max(2vw, 20px);
+    padding: 5px;
+    color: #45A29E;
+    transition-duration: .3s;
+}
+
+.form-button:hover {
+    background-color: #4b4b4b;
+  }

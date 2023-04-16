@@ -1,0 +1,105 @@
+body {
+    background-color: #0b0c10;
+    font-family: 'Inter', sans-serif;
+}
+
+.page-container{
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    align-items: center;
+    justify-content: space-between;
+    
+    width: 98%;
+    height: 98%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    /* border-color: red;
+    border-style: solid;
+    border-radius: 1px; */
+}
+
+.round-tracker{
+    /* border-color: blue;
+    border-style: solid;
+    border-radius: 1px; */
+    color: #66FCF1;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 5vh;
+}
+
+.game-message{
+    /* border-color: orange;
+    border-style: solid;
+    border-radius: 1px; */
+    color: #4bbab2;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 4vh;
+}
+
+.game-container{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-around;
+
+    /* border-color: green;
+    border-style: solid;
+    border-radius: 1px; */
+}
+
+.select-sign{
+    background: #1e1e1e;
+    color: #4bbab2;
+}
+
+.chat-container{
+    /* border-color: yellow;
+    border-style: solid;
+    border-radius: 1px; */
+    width: max(30vw, 200px);
+    height: 20vh;
+}
+
+.chat-display{
+    width: 100%;
+    height: 85%;
+    background-color: #1e1e1e;
+    border:#4bbab2 2px solid;
+    overflow-wrap: anywhere;
+    overflow-y: auto;
+}
+
+.message-input{
+    width: 99%;
+}
+
+.opponent-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.player-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.player-score {
+    color: #4bbab2;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 3vh;
+}
+
+.opponent-score {
+    color: #4bbab2;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 3vh;
+}

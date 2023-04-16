@@ -6,7 +6,7 @@ function OpenGame() {
         CloseGame()
 
     const protocol = window.location.protocol === "https:" ? "wss://" : "ws://"
-    game = new WebSocket(protocol + window.location.hostname + "/api/game")
+    game = new WebSocket(protocol + window.location.host + "/api/game")
 }
 
 function SetOnMessage(handler) {
