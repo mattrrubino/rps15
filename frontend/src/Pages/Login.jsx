@@ -18,7 +18,7 @@ const Login = () => {
             }
 
             const status = xhr.status;
-            if (status === 200) {
+            if (status === 301 || status === 200) {
                 navigate("/")
             } else {
                 alert("Not logged in")
