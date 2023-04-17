@@ -68,10 +68,6 @@ async def logout(response: Response, token: str = Cookie()):
     await deleteSession(token)
     response.delete_cookie("token", httponly=True)
 
-    # Redirect to login page
-    response.status_code = 301
-    response.headers["Location"] = "/login"
-
 #endregion
 
 

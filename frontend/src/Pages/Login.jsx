@@ -18,7 +18,7 @@ const Login = () => {
             }
 
             const status = xhr.status;
-            if (status === 301 || status === 200) {
+            if (status === 200) {
                 navigate("/")
             } else {
                 alert("Not logged in")
@@ -91,7 +91,7 @@ const Login = () => {
                             Submit
                             </button>
 
-                            <button type="button" id="forgot-password" className="form-button" onClick={onLogout}>
+                            <button type="button" id="log-out" className="form-button" onClick={onLogout}>
                             Log Out
                             </button>
                         </div>
