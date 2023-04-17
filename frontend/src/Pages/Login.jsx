@@ -8,8 +8,24 @@ const Login = () => {
         navigate('../CreateAccount')
     }
 
-    function onForgotPassword() {
+    function onLogout() {
+        var xhr = new XMLHttpRequest()
+        xhr.open("POST", "/api/logout")
 
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState != XMLHttpRequest.DONE) {
+                return
+            }
+
+            const status = xhr.status;
+            if (status === 200) {
+                navigate("/")
+            } else {
+                alert("Not logged in")
+            }
+        }
+
+        xhr.send()
     }
 
     function onSubmit() {
@@ -75,8 +91,8 @@ const Login = () => {
                             Submit
                             </button>
 
-                            <button type="button" id="forgot-password" className="form-button" onClick={onForgotPassword}>
-                            Forgot Password
+                            <button type="button" id="forgot-password" className="form-button" onClick={onLogout}>
+                            Log Out
                             </button>
                         </div>
                     </form>

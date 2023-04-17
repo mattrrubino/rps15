@@ -11,6 +11,10 @@ export default function Home() {
     navigate('../login')
   }
 
+  function onProfile() {
+    navigate('../profile')
+  }
+
   function onMessage(event) {
     const message = JSON.parse(event.data)
     if (message.operation == "start_game") {
@@ -45,6 +49,10 @@ export default function Home() {
         <br/>
         <button className='flex-item home-button' onClick={onAccount}>
           Account
+        </button>
+        <br/>
+        <button className='flex-item home-button' onClick={onProfile}>
+          Profile
         </button>
         <br/>
         <button className='flex-item home-button' onClick={waiting ? onCancel : onPlay}>

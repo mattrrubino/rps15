@@ -7,10 +7,23 @@ function App (props) {
   function populateData (data) {
     let Data = [];
 
-    for (const key in data){
-      Data.push({ x: key, y: data[key]})
+    let sum = 0;
+    for (const key in data) {
+      sum += data[key]
+    }
+
+    // Populate with all 1s so it renders on fresh user
+    if (sum === 0) {
+      for (const key in data) {
+        Data.push({ x: key, y: 1})
+      }
+    } else {
+      for (const key in data) {
+        Data.push({ x: key, y: data[key]})
+      }
     }
     
+    Data.sort((a,b) => a.y - b.y)
     return Data;
   }
     
