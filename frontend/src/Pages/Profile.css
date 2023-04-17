@@ -1,0 +1,38 @@
+div{
+    align-items: center;
+    align-content: center;
+    text-align: center;
+    justify-content: center;
+}
+
+.container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.user{
+    text-align: center;
+    color: #66FCF1;
+    font-size: 10px;
+}
+
+.title {
+    display: flex;
+    text-align: center;
+    color: brown;
+    font-size: 25px;
+}
+
+.chart h1 {
+    text-align: center;
+    color: #66FCF1;
+    font-size: 25px;
+}
+
+.chart span {
+    text-align: center;
+    color: #66FCF1;
+    font-size: 15px;
+}
