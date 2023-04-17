@@ -3,7 +3,7 @@ import html
 import asyncio
 import random
 from data import MOVES, VERBS
-from db import incrementUserWins, incrementUserLosses, incrementUserMove
+from db import incrementUserWins, incrementUserLosses, incrementUserMove, transferUserElo
 
 
 class Player:
@@ -117,8 +117,11 @@ class Game:
     async def endSequence(self, winner: Player, loser: Player) -> None:
         msg = json.dumps({"operation": "end_game", "winner": winner.username, "loser": loser.username})
 
-        await incrementUserWins(winner.username)
-        await incrementUserLosses(loser.username)
+        await asyncio.gather(
+            incrementUserWins(winner.username),
+            incrementUserLosses(loser.username),
+            transferUserElo(loser.username, winner.username, max(winner.wins - loser.wins, 0)),
+        )
 
         # Try sending on A's connection
         try:

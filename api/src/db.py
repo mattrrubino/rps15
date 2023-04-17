@@ -1,3 +1,4 @@
+import asyncio
 import secrets
 from bcrypt import hashpw, gensalt
 from typing import Optional
@@ -55,6 +56,22 @@ async def incrementUserMove(username: str, move: str) -> None:
     await user.update_one(
         {"Username": username},
         { "$inc": { f"MoveCounts.{move}": 1 } },
+    )
+
+
+async def transferUserElo(frm: str, to: str, percent: int) -> None:
+    frmUser = await getUser(frm)
+    eloDiff = int(frmUser["Elo"]*percent/100)
+
+    await asyncio.gather(
+        user.update_one(
+            {"Username": frm},
+            { "$inc": { "Elo": -eloDiff } }
+        ),
+        user.update_one(
+            {"Username": to},
+            { "$inc": { "Elo": eloDiff } }
+        ),
     )
 
 #endregion
