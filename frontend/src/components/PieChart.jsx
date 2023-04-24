@@ -19,7 +19,9 @@ function App (props) {
       }
     } else {
       for (const key in data) {
-        Data.push({ x: key, y: data[key]})
+        if (data[key] != 0) {
+          Data.push({ x: key, y: data[key]})
+        }
       }
     }
     
