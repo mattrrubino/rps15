@@ -1,0 +1,43 @@
+.about--page--container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    color: #66FCF1;
+}
+
+.about--page--image{
+    width: 20%;
+    border-radius: 30px;
+}
+
+.about--page--info{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.about--page--info--title{
+    background-color: white;
+    color: black;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 10px;
+}
+
+.about--page--backBtn{
+    font-size: 50px;
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    transform: rotate(90deg);
+    cursor: pointer;
+    transition: .2s ease-in-out;
+}
+
+.about--page--backBtn:hover{
+    transition: .2s ease-in-out;
+    margin-left: -8px;
+}
