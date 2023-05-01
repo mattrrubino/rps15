@@ -71,3 +71,17 @@ input {
 .form-button:hover {
     background-color: #4b4b4b;
   }
+
+.login--page--backBtn{
+    font-size: 50px;
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    cursor: pointer;
+    transition: .2s ease-in-out;
+}
+
+.login--page--backBtn:hover{
+    transition: .2s ease-in-out;
+    margin-left: -8px;
+}

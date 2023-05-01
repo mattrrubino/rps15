@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import PieChart from '../components/PieChart';
 import './Profile.css';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function Profile() {
   const [loading, setLoading] = useState(true);
@@ -36,6 +37,9 @@ export default function Profile() {
 
   return (
     <div>
+      <Link to="/">
+        <div className="profile--page--backBtn">🔫</div>
+      </Link>
       <div className='container'>
         {loading ? (
           <div className='title'><span>Loading...</span></div>

@@ -45,7 +45,7 @@ export default function Home() {
       <div className="home-container">
         <div className='flex-item title'>RPS-15</div>
         <br/>
-        <p className='flex-item description'>Welcom to RPS-15, a modern take on the classic rock-paper-scissors game</p>
+        <p className='flex-item description'>Welcome to RPS-15, a modern take on the classic rock-paper-scissors game</p>
         <br/>
         <button className='flex-item home-button' onClick={onAccount}>
           Account

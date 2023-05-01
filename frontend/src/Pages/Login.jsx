@@ -1,5 +1,5 @@
 import './Login.css'
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 const Login = () => {
     const navigate = useNavigate()
@@ -51,6 +51,9 @@ const Login = () => {
 
     return (
         <div>
+            <Link to="/">
+                <div className="login--page--backBtn">🪨</div>
+            </Link>
             <div className="login-container">
 
                 <div className="login-flex-container">

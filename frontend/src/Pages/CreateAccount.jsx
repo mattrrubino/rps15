@@ -1,5 +1,5 @@
 import './CreateAccount.css'
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 const CreateAccount = () => {
   const navigate = useNavigate()
@@ -38,6 +38,9 @@ const CreateAccount = () => {
 
   return (
     <div>
+      <Link to="/login">
+        <div className="create--page--backBtn">📜</div>
+      </Link>
       <div className="create-account-container">
         <div className="create-flex-container">
 
