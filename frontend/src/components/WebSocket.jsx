@@ -7,6 +7,7 @@ function OpenGame() {
 
     const protocol = window.location.protocol === "https:" ? "wss://" : "ws://"
     game = new WebSocket(protocol + window.location.host + "/api/game")
+    game.onerror = () => alert("You must create an account and log in before you can play")
 }
 
 function SetOnMessage(handler) {

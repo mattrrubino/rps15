@@ -60,7 +60,7 @@ export default function Profile() {
               </div>
             </div>
           ) : (
-            <div className='title'><span>No profile found.</span></div>
+            <div className='title'><span>Not authenticated. No profile.</span></div>
           )
         )
         }
