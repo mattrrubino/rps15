@@ -112,7 +112,7 @@ const Game = (props) => {
     {value: 11, label: "Dragon"},
     {value: 12, label: "Devil"},
     {value: 13, label: "Lightning"},
-    {value: 15, label: "Gun"}
+    {value: 14, label: "Gun"}
   ];
 
   const selectStyles = {
