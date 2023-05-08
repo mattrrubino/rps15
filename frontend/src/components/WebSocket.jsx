@@ -7,7 +7,10 @@ function OpenGame() {
 
     const protocol = window.location.protocol === "https:" ? "wss://" : "ws://"
     game = new WebSocket(protocol + window.location.host + "/api/game")
-    game.onerror = () => alert("You must create an account and log in before you can play")
+    game.onerror = () => alert("You must create an account and log in before you can play.")
+    game.onopen = () => {
+        setTimeout(() => { if (window.location.toString().search("/game") === -1) alert("You have entered the queue. Waiting for another player.") }, 1000)
+    }
 }
 
 function SetOnMessage(handler) {
