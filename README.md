@@ -1,5 +1,5 @@
 # RPS15 Online
-This repository contains the frontend and backend source code for RPS15 Online. The game is available at <https://rps15.live>.
+This repository contains the frontend and backend source code for RPS15 Online.
 
 ## Outline
 The project outline is available on [Google Drive](https://docs.google.com/document/d/1x0xAeOwBHWjecVnfBTDeRkyU-r3mhlzBU-41T72Rxng).
